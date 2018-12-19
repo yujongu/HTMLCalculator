@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+.button-group button {
+  background-color: #1B1B1B;
+  color: grey;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.button-group button:hover {
+  background-color: #444141
+}
+.button-group button:focus {
+  outline: 0 !important;
+}
+</style>
+
+<body>
+<div align="center">
+  <h1>Calculator</h1>
+  <h2>Renubic</h2>
+
+
+  <h3 style="background-color:lightgrey" ID="display">0</h3>
+
+  <div class="button-group">
+    <button ID="grandTotal" onclick="function">GT</button>
+    <button ID="backspace" onclick="del()"><-</button>
+    <button ID="clearInput" onclick="clr()">CE</button>
+    <button ID="empty" onclick="function">c</button>
+    <br/>
+    <button ID="seven" onclick="inputs(7)">7</button>
+    <button ID="eight" onclick="inputs(8)">8</button>
+    <button ID="nine" onclick="inputs(9)">9</button>
+    <button ID="divide" onclick="inputs('/')">/</button>
+    <br/>
+    <button ID="four" onclick="inputs(4)">4</button>
+    <button ID="five" onclick="inputs(5)">5</button>
+    <button ID="six" onclick="inputs(6)">6</button>
+    <button ID="mult" onclick="inputs('*')">X</button>
+    <br/>
+    <button ID="one" onclick="inputs(1)">1</button>
+    <button ID="two" onclick="inputs(2)">2</button>
+    <button ID="three" onclick="inputs(3)">3</button>
+    <button ID="subt" onclick="inputs('-')">-</button>
+    <br/>
+    <button ID="zero" onclick="inputs(0)">0</button>
+    <button ID="point" onclick="inputs('.')">.</button>
+    <button ID="equal" onclick="compute()">=</button>
+    <button ID="add" onclick="inputs('+')">+</button>
+  </div>
+
+<script>
+  var inputArr = [];
+
+  function inputs(inp){
+    if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
+      alert("Plz don't put two operators in a row.");
+    } else {
+      if (inputArr[0] == 0) {
+        inputArr.pop();
+      }
+      inputArr.push(inp);
+      document.getElementById("display").innerHTML = inputArr.join("");
+    }
+  }
+
+  function del(){
+    if (inputArr.length != 1) {
+      inputArr.pop();
+      document.getElementById("display").innerHTML = inputArr.join("");
+    }
+    else {
+      inputArr.pop();
+      inputArr.push(0);
+      document.getElementById("display").innerHTML = inputArr.join("");
+    }
+  }
+
+  function clr(){
+    inputArr = [];
+    inputArr.push(0);
+    document.getElementById("display").innerHTML = inputArr.join("");
+  }
+
+  function compute(){
+    var valS = [];
+    var operS = [];
+    var value = "";
+
+
+    for (var i = 0; i < inputArr.length; i++) {
+      if (typeof inputArr[i] != 'string') {
+        value += inputArr[i];
+      } else {
+        nVal = parseInt(value, 10);
+        value = "";
+        valS.push(nVal);
+
+        if ((inputArr[i] === '+' || inputArr[i] === '-') && (operS[operS.length - 1] === '*' || operS[operS.length - 1] === '/')){
+          var val1 = valS.pop();
+          var val2 = valS.pop();
+          if (operS[operS.length - 1] === '*') {
+            val2 *= val1;
+            valS.push(val2);
+          }
+          else if (operS[operS.length - 1] === '/') {
+            val2 /= val1;
+            valS.push(val2);
+          }
+          alert(val2);
+          operS.pop();
+        }
+        else if ((inputArr[i] === '+' || inputArr[i] === '-') && (operS[operS.length - 1] === '+' || operS[operS.length - 1] === '-')){
+          // var val1 = valS.pop();
+          // var val2 = valS.pop();
+          // if (operS[operS.length - 1] === '+') {
+          //   val2 += val1;
+          //   valS.push(val2);
+          // }
+          // else if (operS[operS.length - 1] === '-') {
+          //   val2 -= val1;
+          //   valS.push(val2);
+          // }
+          // alert(val2);
+          // operS.pop();
+          while (operS.length != 0) {
+            val1 = valS.pop();
+            val2 = valS.pop();
+            if (operS[operS.length - 1] === '+') {
+              val2 += val1;
+              valS.push(val2);
+            }
+            else if (operS[operS.length - 1] === '-') {
+              val2 -= val1;
+              valS.push(val2);
+            }
+            alert(val2);
+            operS.pop();
+          }
+        }
+        alert(inputArr[i]);
+        operS.push(inputArr[i]);
+      }
+    }
+    nVal = parseInt(value, 10);
+    valS.push(nVal);
+
+    while (operS.length != 0) {
+      val1 = valS.pop();
+      val2 = valS.pop();
+      if (operS[operS.length - 1] === '+') {
+        val2 += val1;
+        valS.push(val2);
+      }
+      else if (operS[operS.length - 1] === '-') {
+        val2 -= val1;
+        valS.push(val2);
+      }
+      else if (operS[operS.length - 1] === '*') {
+        val2 *= val1;
+        valS.push(val2);
+      }
+      else if (operS[operS.length - 1] === '/') {
+        val2 /= val1;
+        valS.push(val2);
+      }
+      alert(val2);
+      operS.pop();
+    }
+    alert("Answer is ");
+    alert(valS.pop());
+
+
+
+
+
+
+    for (var i = 0; i < valS.length; i++) {
+      alert(valS[i]);
+    }
+    alert("====");
+    for (var i = 0; i < operS.length; i++) {
+      alert(operS[i]);
+    }
+
+  }
+
+</script>
+</body>
+</html>
