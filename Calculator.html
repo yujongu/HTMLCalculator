@@ -26,7 +26,7 @@
   <h2>Renubic</h2>
 
 
-  <h3 style="background-color:lightgrey" ID="display">0</h3>
+  <h3 style="background-color:lightgrey" ID="display"></h3>
 
   <div class="button-group">
     <button ID="grandTotal" onclick="function">GT</button>
@@ -56,7 +56,8 @@
   </div>
 
 <script>
-  var inputArr = [];
+  var inputArr = [0];
+  document.getElementById("display").innerHTML = inputArr.join("");
 
   function inputs(inp){
     if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
@@ -88,12 +89,36 @@
     document.getElementById("display").innerHTML = inputArr.join("");
   }
 
+  var valS = [];
+  var operS = [];
+
+  function oper(){
+    var val1;
+    var val2;
+
+    val1 = valS.pop();
+    val2 = valS.pop();
+    if (operS[operS.length - 1] === '+') {
+      val2 += val1;
+      valS.push(val2);
+    }
+    else if (operS[operS.length - 1] === '-') {
+      val2 -= val1;
+      valS.push(val2);
+    }
+    else if (operS[operS.length - 1] === '*') {
+      val2 *= val1;
+      valS.push(val2);
+    }
+    else if (operS[operS.length - 1] === '/') {
+      val2 /= val1;
+      valS.push(val2);
+    }
+    operS.pop();
+  }
+
   function compute(){
-    var valS = [];
-    var operS = [];
     var value = "";
-
-
     for (var i = 0; i < inputArr.length; i++) {
       if (typeof inputArr[i] != 'string') {
         value += inputArr[i];
@@ -102,93 +127,27 @@
         value = "";
         valS.push(nVal);
 
-        if ((inputArr[i] === '+' || inputArr[i] === '-') && (operS[operS.length - 1] === '*' || operS[operS.length - 1] === '/')){
-          var val1 = valS.pop();
-          var val2 = valS.pop();
-          if (operS[operS.length - 1] === '*') {
-            val2 *= val1;
-            valS.push(val2);
-          }
-          else if (operS[operS.length - 1] === '/') {
-            val2 /= val1;
-            valS.push(val2);
-          }
-          alert(val2);
-          operS.pop();
-        }
-        else if ((inputArr[i] === '+' || inputArr[i] === '-') && (operS[operS.length - 1] === '+' || operS[operS.length - 1] === '-')){
-          // var val1 = valS.pop();
-          // var val2 = valS.pop();
-          // if (operS[operS.length - 1] === '+') {
-          //   val2 += val1;
-          //   valS.push(val2);
-          // }
-          // else if (operS[operS.length - 1] === '-') {
-          //   val2 -= val1;
-          //   valS.push(val2);
-          // }
-          // alert(val2);
-          // operS.pop();
-          while (operS.length != 0) {
-            val1 = valS.pop();
-            val2 = valS.pop();
-            if (operS[operS.length - 1] === '+') {
-              val2 += val1;
-              valS.push(val2);
+        if (operS.length == 0) {
+          operS.push(inputArr[i]);
+        } else {
+          if ((operS[operS.length - 1] === '+' || operS[operS.length - 1] === '-') && (inputArr[i] === '*' || inputArr[i] === '/')) {
+            operS.push(inputArr[i]);
+          } else {
+            while (operS.length != 0) {
+              oper();
             }
-            else if (operS[operS.length - 1] === '-') {
-              val2 -= val1;
-              valS.push(val2);
-            }
-            alert(val2);
-            operS.pop();
+            operS.push(inputArr[i]);
           }
         }
-        alert(inputArr[i]);
-        operS.push(inputArr[i]);
       }
     }
     nVal = parseInt(value, 10);
     valS.push(nVal);
-
     while (operS.length != 0) {
-      val1 = valS.pop();
-      val2 = valS.pop();
-      if (operS[operS.length - 1] === '+') {
-        val2 += val1;
-        valS.push(val2);
-      }
-      else if (operS[operS.length - 1] === '-') {
-        val2 -= val1;
-        valS.push(val2);
-      }
-      else if (operS[operS.length - 1] === '*') {
-        val2 *= val1;
-        valS.push(val2);
-      }
-      else if (operS[operS.length - 1] === '/') {
-        val2 /= val1;
-        valS.push(val2);
-      }
-      alert(val2);
-      operS.pop();
+      oper();
     }
     alert("Answer is ");
     alert(valS.pop());
-
-
-
-
-
-
-    for (var i = 0; i < valS.length; i++) {
-      alert(valS[i]);
-    }
-    alert("====");
-    for (var i = 0; i < operS.length; i++) {
-      alert(operS[i]);
-    }
-
   }
 
 </script>
