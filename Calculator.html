@@ -18,49 +18,90 @@
 .button-group button:focus {
   outline: 0 !important;
 }
+
+#parent{
+  width: 400px;
+}
+#child1{
+  float: left;
+  width: 60%
+}
+#child2{
+  float: right;
+  width: 40%
+}
+
+#phr{
+  width: 400px;
+}
+#hr1{
+  float: left;
+  width: 60%
+}
+#hr2{
+  float: right;
+  width: 40%
+}
+
 </style>
 
 <body>
 <div align="center">
   <h1>Calculator</h1>
   <h2>Renubic</h2>
+  <div ID="phr">
+    <div ID="hr1">
+      <h4 style="border:2px solid red" ID="eq"></h4>
+      <h3 style="background-color:lightgrey" ID="display"></h3>
+    </div>
+    <div ID="hr2">
+    </div>
+  </div>
 
+  <div ID="parent">
+    <div class="button-group" ID="child1">
+      <button ID="grandTotal" onclick="grandT()">GT</button>
+      <button ID="backspace" onclick="del()"><-</button>
+      <button ID="clearInput" onclick="clr()">CE</button>
+      <button ID="empty" onclick="empty()">c</button>
+      <br/>
+      <button ID="seven" onclick="inputs(7)">7</button>
+      <button ID="eight" onclick="inputs(8)">8</button>
+      <button ID="nine" onclick="inputs(9)">9</button>
+      <button ID="divide" onclick="inputs('/')">/</button>
+      <br/>
+      <button ID="four" onclick="inputs(4)">4</button>
+      <button ID="five" onclick="inputs(5)">5</button>
+      <button ID="six" onclick="inputs(6)">6</button>
+      <button ID="mult" onclick="inputs('*')">X</button>
+      <br/>
+      <button ID="one" onclick="inputs(1)">1</button>
+      <button ID="two" onclick="inputs(2)">2</button>
+      <button ID="three" onclick="inputs(3)">3</button>
+      <button ID="subt" onclick="inputs('-')">-</button>
+      <br/>
+      <button ID="zero" onclick="inputs(0)">0</button>
+      <button ID="point" onclick="inputs('.')">.</button>
+      <button ID="equal" onclick="compute()">=</button>
+      <button ID="add" onclick="inputs('+')">+</button>
+    </div>
 
-  <h3 style="background-color:lightgrey" ID="display"></h3>
-
-  <div class="button-group">
-    <button ID="grandTotal" onclick="function">GT</button>
-    <button ID="backspace" onclick="del()"><-</button>
-    <button ID="clearInput" onclick="clr()">CE</button>
-    <button ID="empty" onclick="function">c</button>
-    <br/>
-    <button ID="seven" onclick="inputs(7)">7</button>
-    <button ID="eight" onclick="inputs(8)">8</button>
-    <button ID="nine" onclick="inputs(9)">9</button>
-    <button ID="divide" onclick="inputs('/')">/</button>
-    <br/>
-    <button ID="four" onclick="inputs(4)">4</button>
-    <button ID="five" onclick="inputs(5)">5</button>
-    <button ID="six" onclick="inputs(6)">6</button>
-    <button ID="mult" onclick="inputs('*')">X</button>
-    <br/>
-    <button ID="one" onclick="inputs(1)">1</button>
-    <button ID="two" onclick="inputs(2)">2</button>
-    <button ID="three" onclick="inputs(3)">3</button>
-    <button ID="subt" onclick="inputs('-')">-</button>
-    <br/>
-    <button ID="zero" onclick="inputs(0)">0</button>
-    <button ID="point" onclick="inputs('.')">.</button>
-    <button ID="equal" onclick="compute()">=</button>
-    <button ID="add" onclick="inputs('+')">+</button>
+    <div ID="child2">
+      <p>History</p>
+      <ul id="prevRes">
+      </ul>
+    </div>
   </div>
 
 <script>
   var inputArr = [0];
   document.getElementById("display").innerHTML = inputArr.join("");
+  document.getElementById("eq").innerHTML = inputArr.join("");
 
   function inputs(inp){
-    if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
+    if (typeof inp == 'string' && inputArr[0] == 0) {
+      alert("Plz put an operand(a number) first.");
+    } else if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
       alert("Plz don't put two operators in a row.");
     } else {
       if (inputArr[0] == 0) {
@@ -87,6 +128,17 @@
     inputArr = [];
     inputArr.push(0);
     document.getElementById("display").innerHTML = inputArr.join("");
+  }
+
+  function empty(){
+    inputArr = [];
+    inputArr.push(0);
+    document.getElementById("display").innerHTML = inputArr.join("");
+    document.getElementById("eq").innerHTML = inputArr.join("");
+    for (var i = 0; i < resArr.length; i++) {
+      document.getElementById("prevRes").innerHTML = "";
+    }
+    resArr = [];
   }
 
   var valS = [];
@@ -117,37 +169,60 @@
     operS.pop();
   }
 
-  function compute(){
-    var value = "";
-    for (var i = 0; i < inputArr.length; i++) {
-      if (typeof inputArr[i] != 'string') {
-        value += inputArr[i];
-      } else {
-        nVal = parseInt(value, 10);
-        value = "";
-        valS.push(nVal);
+  var resArr = [];
 
-        if (operS.length == 0) {
-          operS.push(inputArr[i]);
+  function compute(){
+    if (typeof inputArr[inputArr.length - 1] == 'string') {
+      alert("Can't end an equation with an operator!");
+    } else {
+
+      document.getElementById("eq").innerHTML = inputArr.join("");
+
+      var value = "";
+      for (var i = 0; i < inputArr.length; i++) {
+
+        if (typeof inputArr[i] != 'string') {
+          value += inputArr[i];
         } else {
-          if ((operS[operS.length - 1] === '+' || operS[operS.length - 1] === '-') && (inputArr[i] === '*' || inputArr[i] === '/')) {
+          nVal = parseInt(value, 10);
+          value = "";
+          valS.push(nVal);
+
+          if (operS.length == 0) {
             operS.push(inputArr[i]);
           } else {
-            while (operS.length != 0) {
-              oper();
+            if ((operS[operS.length - 1] === '+' || operS[operS.length - 1] === '-') && (inputArr[i] === '*' || inputArr[i] === '/')) {
+              operS.push(inputArr[i]);
+            } else {
+              while (operS.length != 0) {
+                oper();
+              }
+              operS.push(inputArr[i]);
             }
-            operS.push(inputArr[i]);
           }
         }
+
       }
+      nVal = parseInt(value, 10);
+      valS.push(nVal);
+      while (operS.length != 0) {
+        oper();
+      }
+
+
+      inputArr = [valS.pop()];
+      document.getElementById("display").innerHTML = inputArr.join("");
+      document.getElementById("prevRes").innerHTML += ('<li>' + inputArr.join("") + '</li>');
+      resArr.push(inputArr[0]);
     }
-    nVal = parseInt(value, 10);
-    valS.push(nVal);
-    while (operS.length != 0) {
-      oper();
+  }
+
+  function grandT(){
+    var sum = 0;
+    for (var i = 0; i < resArr.length; i++) {
+      sum += resArr[i];
     }
-    alert("Answer is ");
-    alert(valS.pop());
+    document.getElementById("display").innerHTML = sum;
   }
 
 </script>
