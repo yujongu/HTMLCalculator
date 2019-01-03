@@ -51,7 +51,7 @@
   <h2>Renubic</h2>
   <div ID="phr">
     <div ID="hr1">
-      <h4 style="border:2px solid red" ID="eq"></h4>
+      <h4 style="border:2px solid red" ID="eq">0</h4>
       <h3 style="background-color:lightgrey" ID="display"></h3>
     </div>
     <div ID="hr2">
@@ -98,13 +98,29 @@
   document.getElementById("display").innerHTML = inputArr.join("");
   document.getElementById("eq").innerHTML = inputArr.join("");
 
+  // function inputs(inp){
+  //   if (typeof inp == 'string' && inputArr[0] == 0) {
+  //     alert("Plz put an operand(a number) first.");
+  //   } else if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
+  //     alert("Plz don't put two operators in a row.");
+  //   } else {
+  //     if (inputArr[0] == 0) {
+  //       inputArr.pop();
+  //     }
+  //     inputArr.push(inp);
+  //     document.getElementById("display").innerHTML = inputArr.join("");
+  //   }
+  // }
+
   function inputs(inp){
-    if (typeof inp == 'string' && inputArr[0] == 0) {
-      alert("Plz put an operand(a number) first.");
-    } else if (typeof inp != 'number' && typeof inputArr[inputArr.length - 1] == 'string') {
+    if (inp == 0 && inputArr[0] == 0 && inputArr.length == 1) {
+      inputArr.pop();
+      inputArr.push(0);
+      document.getElementById("display").innerHTML = inputArr.join("");
+    } else if (typeof inp == 'string' && typeof inputArr[inputArr.length - 1] == 'string') {
       alert("Plz don't put two operators in a row.");
     } else {
-      if (inputArr[0] == 0) {
+      if (inputArr[0] == 0 && inputArr.length == 1 && typeof inp == 'number') {
         inputArr.pop();
       }
       inputArr.push(inp);
@@ -144,9 +160,20 @@
   var valS = [];
   var operS = [];
 
+  function dec(){
+
+  }
+
+  function printStack(){
+    alert(valS.join(", ") + "=====" + operS.join(", "));
+  }
+
   function oper(){
     var val1;
     var val2;
+
+    // printStack();
+
 
     val1 = valS.pop();
     val2 = valS.pop();
@@ -166,10 +193,28 @@
       val2 /= val1;
       valS.push(val2);
     }
+    // else if (operS[operS.length - 1] === '.') {
+    //   alert("Dec");
+    //   var counter = 0;
+    //   var temp = val1;
+    //   while (temp != 0) {
+    //     temp = Math.floor(temp/10);
+    //     alert(temp);
+    //     counter++;
+    //   }
+    //   val2 = val2 + '' + val1;
+    //   alert(val2);
+    //   alert(counter);
+    //   var ten = Math.pow(10, counter);
+    //   alert(ten);
+    //   val2 = parseInt(val2, 10) / ten;
+    //   valS.push(val2);
+    // }
     operS.pop();
   }
 
   var resArr = [];
+
 
   function compute(){
     if (typeof inputArr[inputArr.length - 1] == 'string') {
@@ -180,7 +225,7 @@
 
       var value = "";
       for (var i = 0; i < inputArr.length; i++) {
-
+        // printStack();
         if (typeof inputArr[i] != 'string') {
           value += inputArr[i];
         } else {
@@ -201,14 +246,14 @@
             }
           }
         }
-
       }
       nVal = parseInt(value, 10);
       valS.push(nVal);
+      // printStack();
+
       while (operS.length != 0) {
         oper();
       }
-
 
       inputArr = [valS.pop()];
       document.getElementById("display").innerHTML = inputArr.join("");
